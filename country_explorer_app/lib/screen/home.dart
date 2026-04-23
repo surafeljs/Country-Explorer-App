@@ -214,6 +214,43 @@ class _HomeState extends State<Home> {
                                   ],
                                 ),
                               ),
+                              SizedBox(height: 30.0),
+
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Capital',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(width: 100.0),
+                                    Text(
+                                      'Addis Ababa',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20.0),
+
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+
+                                  children: [
+                                    Text(
+                                      'Currency',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(width: 88.0),
+
+                                    Text('ETB', style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),

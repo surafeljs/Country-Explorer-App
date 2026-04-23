@@ -37,6 +37,14 @@ class _HomepageState extends State<Homepage> {
       ),
 
       body: Home(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1,
+
+        items: [
+          BottomNavigationBarItem(label: 'Explore', icon: Icon(Icons.home)),
+          BottomNavigationBarItem(label: 'Search', icon: Icon(Icons.search)),
+        ],
+      ),
     );
   }
 }
