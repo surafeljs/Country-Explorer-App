@@ -1,4 +1,7 @@
+import 'package:country_explorer_app/models/country.dart';
+import 'package:country_explorer_app/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -8,261 +11,218 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late Future<List<Country>> futureCountries;
+
+  @override
+  void initState() {
+    super.initState();
+    futureCountries = ApiService().fetchCountry();
+
+    // debugPrintCountries();
+  }
+
+  // Future<void> debugPrintCountries() async {
+  //   final countries = await futureCountries;
+
+  //   for (var c in countries) {
+  //     print(c.capital);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return Column(
+    final width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Divider(),
+
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 350,
+                height: 160,
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 22, top: 30),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Discover Nations',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 6, 6, 62),
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const Padding(
+                      padding: EdgeInsets.only(left: 22, top: 8),
+                      child: Text(
+                        'Access detailed economic, geographic, and cultural data from 195+ countries across the globe.',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search countries by name or capital',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children: [
-                  Divider(),
-                  Align(
-                    alignment: AlignmentGeometry.topLeft,
-                    child: SizedBox(
-                      width: 350,
-                      height: 180.0,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 22.0,
-                              top: 30.0,
-                            ),
-                            child: Align(
-                              alignment: AlignmentGeometry.topLeft,
-                              child: Text(
-                                'Discover Nations',
-                                style: TextStyle(
-                                  fontSize: 30.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 22.0, top: 10.0),
-
-                            child: Text(
-                              'Access detailed economic, geographic, and cultural data from 195+ countries across the globe.',
-                              style: TextStyle(fontSize: 15.0),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hint: Text('Search countries by name capital or'),
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 40.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                            ),
-                            child: InkWell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 60, 97, 161),
-
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 15.0,
-                                    horizontal: 22.0,
-                                  ),
-                                  child: const Text('All countries'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          InkWell(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15.0,
-                                  horizontal: 22.0,
-                                ),
-                                child: const Text('Europe'),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          InkWell(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15.0,
-                                  horizontal: 22.0,
-                                ),
-                                child: const Text('Asia'),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          InkWell(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15.0,
-                                  horizontal: 22.0,
-                                ),
-                                child: const Text('Africa'),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 50.0),
-                  Card(
-                    elevation: 8.0,
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                            vertical: 20.0,
-                          ),
-                          child: Container(
-                            width: 320,
-                            height: 200,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(12.0),
-                                bottomLeft: Radius.circular(12.0),
-                              ),
-                              color: Color.fromARGB(16, 233, 30, 98),
-                            ),
-                          ),
-                        ),
-
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                child: Text(
-                                  'Ethiopia',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15.0),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.0),
-
-                                child: Row(
-                                  spacing: 20.0,
-
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Africa',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-
-                                    Text(
-                                      'East africa',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 30.0),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Capital',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    SizedBox(width: 100.0),
-                                    Text(
-                                      'Addis Ababa',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 20.0),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-
-                                  children: [
-                                    Text(
-                                      'Currency',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    SizedBox(width: 88.0),
-
-                                    Text('ETB', style: TextStyle(fontSize: 16)),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _filterChip("All countries", true),
+                  _filterChip("Europe", false),
+                  _filterChip("Asia", false),
+                  _filterChip("Africa", false),
                 ],
-              );
-            },
-          ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            FutureBuilder<List<Country>>(
+              future: futureCountries,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+
+                if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                }
+
+                final countries = snapshot.data ?? [];
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: countries.length,
+                  itemBuilder: (context, index) {
+                    final country = countries[index];
+
+                    return Card(
+                      elevation: 8,
+                      margin: const EdgeInsets.all(20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: width,
+                              height: 200,
+
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(22.0),
+                                  bottomLeft: Radius.circular(25.0),
+                                ),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    country.flags.png.toString(),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+
+                            Text(
+                              country.name.common,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            Row(
+                              children: [
+                                Text(country.region),
+                                const SizedBox(width: 10),
+                                Text(country.subregion),
+                              ],
+                            ),
+
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Text(
+                                  'Capital',
+                                  style: TextStyle(fontSize: 15.0),
+                                ),
+                                const SizedBox(width: 90),
+                                FittedBox(
+                                  child: Text(
+                                    " ${country.capital..join(', ')}",
+                                    style: TextStyle(fontSize: 18.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.0),
+                            Row(
+                              children: [
+                                Text(
+                                  'Currency',
+                                  style: TextStyle(fontSize: 15.0),
+                                ),
+                                const SizedBox(width: 80),
+                                Text(" ", style: TextStyle(fontSize: 18.0)),
+                              ],
+                            ),
+                            // Text("Capital: ${country.capital.join(', ')}"),
+                            // Text("Currency"),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _filterChip(String title, bool selected) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFF9AD872) : Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 22),
+        child: Text(title),
+      ),
     );
   }
 }

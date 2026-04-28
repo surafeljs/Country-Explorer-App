@@ -1,4 +1,5 @@
 import 'package:country_explorer_app/screen/home.dart';
+import 'package:country_explorer_app/screen/search.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
@@ -9,6 +10,9 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [Home(), Search()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,10 +20,14 @@ class _HomepageState extends State<Homepage> {
         title: Row(
           spacing: 10.0,
           children: [
-            Icon(Icons.public, size: 28.0),
+            Icon(color: Color(0xFF162E93), Icons.public, size: 28.0),
             Text(
               'Global Explorer',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Color(0xFF162E93),
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -27,18 +35,28 @@ class _HomepageState extends State<Homepage> {
           // IconButton.outlined(onPressed: () {}, icon: Icon(Icons.search)),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12.0),
-              onTap: () {},
-              child: Icon(Icons.search),
+
+            child: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Search()),
+                );
+              },
             ),
           ),
         ],
       ),
 
-      body: Home(),
+      body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
+        currentIndex: _currentIndex,
+        onTap: (value) {
+          setState(() {
+            _currentIndex = value;
+          });
+        },
 
         items: [
           BottomNavigationBarItem(label: 'Explore', icon: Icon(Icons.home)),
