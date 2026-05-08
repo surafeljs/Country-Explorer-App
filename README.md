@@ -20,4 +20,4 @@ This project is a Flutter app that displays country information using REST APIs.
 ## Limitations
 - No offline support
 - Limited error handling
-- UI not optimized for tablets
+
