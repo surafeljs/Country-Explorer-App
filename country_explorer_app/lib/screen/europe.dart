@@ -96,7 +96,63 @@ class _AfricaState extends State<Europe> {
               }
 
               if (snapshot.hasError) {
-                return Text("Error: ${snapshot.error}");
+                final errorMessage = snapshot.error.toString();
+                final isConnectivityError = errorMessage.contains(
+                  'No internet connection',
+                );
+
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        isConnectivityError ? Icons.wifi_off : Icons.error,
+                        size: 64,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        isConnectivityError
+                            ? 'No Internet Connection'
+                            : 'Failed to Load Countries',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          isConnectivityError
+                              ? 'Please check your internet connection and try again.'
+                              : 'Something went wrong while loading countries. Please try again.',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            futureCountries = Region().fetchByRegion('europe');
+                          });
+                        },
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Retry'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
 
               final countries = snapshot.data ?? [];

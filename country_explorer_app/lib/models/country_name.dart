@@ -6,4 +6,8 @@ class CountryName {
   factory CountryName.fromJson(Map<String, dynamic> json) {
     return CountryName(common: json['common'] ?? ' ');
   }
+
+  Map<String, dynamic> toJson() {
+    return {'common': common};
+  }
 }

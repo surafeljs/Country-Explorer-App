@@ -15,6 +15,7 @@ class _SearchState extends State<Search> {
   final SearchService _searchService = SearchService();
   List<Country> _searchResults = [];
   bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -30,7 +31,10 @@ class _SearchState extends State<Search> {
   }
 
   Future<void> _loadInitialCountries() async {
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
     try {
       final results = await _searchService.searchCountries('');
       setState(() {
@@ -38,8 +42,10 @@ class _SearchState extends State<Search> {
         _isLoading = false;
       });
     } catch (e) {
-      setState(() => _isLoading = false);
-      // Handle error
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.toString();
+      });
     }
   }
 
@@ -48,7 +54,10 @@ class _SearchState extends State<Search> {
   }
 
   Future<void> _performSearch(String query) async {
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
     try {
       final results = await _searchService.searchCountries(query);
       setState(() {
@@ -56,8 +65,10 @@ class _SearchState extends State<Search> {
         _isLoading = false;
       });
     } catch (e) {
-      setState(() => _isLoading = false);
-      // Handle error
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.toString();
+      });
     }
   }
 
@@ -67,7 +78,7 @@ class _SearchState extends State<Search> {
     return Column(
       children: [
         // Search Header
-        Divider(),
+        const Divider(),
         Align(
           alignment: Alignment.topLeft,
           child: SizedBox(
@@ -82,14 +93,14 @@ class _SearchState extends State<Search> {
                     child: Text(
                       'Discover Nations',
                       style: TextStyle(
-                        color: Color.fromARGB(255, 6, 6, 62),
+                        color: const Color.fromARGB(255, 6, 6, 62),
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 22.0, top: 8.0),
                   child: Text(
                     'Search through detailed profiles of every sovereign nation across the seven continents.',
@@ -103,15 +114,15 @@ class _SearchState extends State<Search> {
 
         // Search TextField
         Padding(
-          padding: EdgeInsets.only(left: 30.0, right: 30.0),
+          padding: const EdgeInsets.only(left: 30.0, right: 30.0),
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
               hintText: 'Search countries...',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
-                      icon: Icon(Icons.clear),
+                      icon: const Icon(Icons.clear),
                       onPressed: () {
                         setState(() {
                           _searchController.clear();
@@ -126,19 +137,76 @@ class _SearchState extends State<Search> {
           ),
         ),
 
-        SizedBox(height: 22.0),
+        const SizedBox(height: 22.0),
 
         // Search Results
         Expanded(
           child: _isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
+              : _errorMessage != null
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        _errorMessage!.contains('No internet connection')
+                            ? Icons.wifi_off
+                            : Icons.error,
+                        size: 64,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        _errorMessage!.contains('No internet connection')
+                            ? 'No Internet Connection'
+                            : 'Failed to Load Countries',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          _errorMessage!.contains('No internet connection')
+                              ? 'Please check your internet connection and try again.'
+                              : 'Something went wrong while loading countries. Please try again.',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (_searchController.text.isEmpty) {
+                            _loadInitialCountries();
+                          } else {
+                            _performSearch(_searchController.text);
+                          }
+                        },
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Retry'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               : _searchResults.isEmpty
               ? Center(
                   child: Text(
                     _searchController.text.isEmpty
                         ? 'Start typing to search countries...'
                         : 'No countries found matching "${_searchController.text}"',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 )
               : ListView.builder(
@@ -147,7 +215,7 @@ class _SearchState extends State<Search> {
                     final country = _searchResults[index];
                     return Card(
                       elevation: 8.0,
-                      margin: EdgeInsets.all(20.0),
+                      margin: const EdgeInsets.all(20.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
@@ -164,7 +232,7 @@ class _SearchState extends State<Search> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Flag placeholder (you can add actual flag image later)
+                            // Flag Image
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10.0,
@@ -174,45 +242,53 @@ class _SearchState extends State<Search> {
                                 width: width,
                                 height: 200,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                     topRight: Radius.circular(12.0),
                                     bottomLeft: Radius.circular(12.0),
                                   ),
-                                  color: Color.fromARGB(16, 233, 30, 98),
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    country.flags.png.isNotEmpty
-                                        ? '🇺🇳'
-                                        : '🏳️',
-                                    style: TextStyle(fontSize: 80),
-                                  ),
-                                ),
+                                child: country.flags.png.isNotEmpty
+                                    ? Image.network(
+                                        country.flags.png,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Icon(
+                                                  Icons.flag,
+                                                  size: 80,
+                                                  color: Colors.grey,
+                                                ),
+                                      )
+                                    : const Center(
+                                        child: Icon(
+                                          Icons.flag,
+                                          size: 80,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
                               ),
                             ),
-
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0,
                                     ),
                                     child: Text(
                                       country.name.common,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color.fromARGB(255, 6, 6, 62),
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 15.0),
-
+                                  const SizedBox(height: 15.0),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0,
                                     ),
                                     child: Row(
@@ -221,14 +297,14 @@ class _SearchState extends State<Search> {
                                       children: [
                                         Text(
                                           country.region,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Color(0xFF2F2FE4),
                                             fontSize: 16,
                                           ),
                                         ),
                                         Text(
                                           country.subregion,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Color(0xFF2F2FE4),
                                             fontSize: 16,
                                           ),
@@ -236,46 +312,51 @@ class _SearchState extends State<Search> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 30.0),
-
+                                  const SizedBox(height: 30.0),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0,
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
+                                        const Text(
                                           'Capital',
                                           style: TextStyle(fontSize: 16),
                                         ),
-                                        SizedBox(width: 100.0),
+                                        const SizedBox(width: 100.0),
                                         Text(
                                           country.capital.isNotEmpty
                                               ? country.capital[0]
                                               : 'N/A',
-                                          style: TextStyle(fontSize: 16),
+                                          style: const TextStyle(fontSize: 16),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 20.0),
-
+                                  const SizedBox(height: 20.0),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0,
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
-                                          'Region',
+                                        const Text(
+                                          'Currency',
                                           style: TextStyle(fontSize: 16),
                                         ),
-                                        SizedBox(width: 100.0),
+                                        const SizedBox(width: 100.0),
                                         Text(
-                                          country.region,
-                                          style: TextStyle(fontSize: 16),
+                                          country.currencies.isNotEmpty
+                                              ? country
+                                                        .currencies
+                                                        .entries
+                                                        .first
+                                                        .value['name'] ??
+                                                    'N/A'
+                                              : 'N/A',
+                                          style: const TextStyle(fontSize: 16),
                                         ),
                                       ],
                                     ),

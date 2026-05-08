@@ -1,5 +1,6 @@
 import 'package:country_explorer_app/screen/home.dart';
-import 'package:country_explorer_app/screen/search.dart';
+import 'package:country_explorer_app/screen/saved_screen.dart';
+
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
@@ -12,7 +13,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [Home(), Search()];
+  final List<Widget> _pages = [Home(), SavedScreen()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,19 +34,19 @@ class _HomepageState extends State<Homepage> {
         ),
         actions: [
           // IconButton.outlined(onPressed: () {}, icon: Icon(Icons.search)),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
 
-            child: IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Search()),
-                );
-              },
-            ),
-          ),
+          //   child: IconButton(
+          //     icon: Icon(Icons.search),
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(builder: (context) => Search()),
+          //       );
+          //     },
+          //   ),
+          // ),
         ],
       ),
 
@@ -60,7 +61,8 @@ class _HomepageState extends State<Homepage> {
 
         items: [
           BottomNavigationBarItem(label: 'Explore', icon: Icon(Icons.home)),
-          BottomNavigationBarItem(label: 'Search', icon: Icon(Icons.search)),
+          // BottomNavigationBarItem(label: 'Search', icon: Icon(Icons.search)),
+          BottomNavigationBarItem(label: 'Saved', icon: Icon(Icons.bookmark)),
         ],
       ),
     );
